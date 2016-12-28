@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>新闻后台管理系统</title>
+    <!--响应式，约束缩放-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!-- 通知IE采用其支持的最新模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 引入bootstrap-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        .sidebar,.content{
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .content{
+            margin-left: -1px;
+        }
+        .main{
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 100%;
+        }
+        table th,td{
+            font-size: 12px;
+            text-align: center;
+        }
+        .delUrl,.updateUrl{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<nav class="nav navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <!--项目名称，logo,品牌-->
+        <a class="navbar-brand" href="#">新闻管理系统</a>
+    </div>
+    <ul class="nav navbar-nav pull-right visible-lg">
+        <li><a href="">欢迎：admin</a></li>
+        <li><a href="">退出</a></li>
+        <li><a href="">消息
+            <span class="badge">10</span></a></li>
+    </ul>
+</nav>
+<div class="container-fluid">
+    <div class="row main">
+        <!--侧边栏-->
+        <div class="col-lg-2 sidebar">
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="javascript:" id="articleList"><span class="glyphicon glyphicon-plus"></span>文章管理</a></li>
+            </ul>
+        </div>
+        <!--内容区-->
+        <div class="col-lg-10 content">
+            <div class="panel">
+                <div class="panel-heading bg-info">
+                    <button id="add" class="btn btn-primary" style="margin-right: 10px;">添加文章</button>
+                </div>
+                <table id="dataTable" class="table table-hover  table-bordered table-responsive" style="text-align: center;">
+                        <thead>
+                            <tr class="active">
+                                <th>序号</th>
+                                <th>标题</th>
+                                <th>内容</th>
+                                <th>标注</th>
+                                <th>日期</th>
+                                <th>分类</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+            </div>
+    </div>
+    </div>
+    <!--确认删除的模态框-->
+<div class="modal fade" id="delModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">删除确认</h4>
+            </div>
+            <div class="modal-body">
+                <p>确认删除吗</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button"  class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="confirmBtn">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <!--添加文章的模态框-->
+<div class="modal fade" id="addModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">添加文章</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="addNewsTitle">标题</label>
+                        <input type="text" name="newsTitle" class="form-control" id="addNewsTitle" placeholder="请输入新闻标题">
+                    </div>
+                    <div class="form-group">
+                        <label for="addNewsContent">内容</label>
+                        <textarea name="newsContent" class="form-control" id="addNewsContent" placeholder="请输入新闻内容" cols="30" rows="6"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="addNewsMark">标注</label>
+                        <input  type="text" name="newsMark" class="form-control" id="addNewsMark" placeholder="请输入新闻标注">
+                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<label for="addThumbPath">缩略图</label>-->
+                        <!--<input type="file" name="file" class="form-control" id="addThumbPath">-->
+                    <!--</div>-->
+                    <div class="form-group">
+                        <label for="addNewsType">分类</label>
+                        <select name="newsType" class="form-control"  id="addNewsType">
+                            <option value="精选">精选</option>
+                            <option value="百家">百家</option>
+                            <option value="本地">本地</option>
+                            <option value="娱乐">娱乐</option>
+                            <option value="社会">社会</option>
+                            <option value="军事">军事</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="addBtn">添加文章</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <!--编辑的模态框-->
+    <div class="modal fade" id="editModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">编辑文章</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="addNewsTitle">标题</label>
+                            <input type="text" name="newsTitle" class="form-control" id="editNewsTitle" placeholder="请输入新闻标题">
+                        </div>
+                        <div class="form-group">
+                            <label for="addNewsContent">内容</label>
+                            <textarea name="newsContent" class="form-control" id="editNewsContent" placeholder="请输入新闻内容" cols="30" rows="6"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="addNewsMark">标注</label>
+                            <input type="text" name="newMark" class="form-control" id="editNewsMark" placeholder="请输入新闻标注">
+                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label for="editThumbPath">缩略图</label>-->
+                            <!--<input type="file" name="file" class="form-control" id="editThumbPath">-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label for="addNewsType">分类</label>
+                            <select name="newsType" class="form-control"  id="editNewsType">
+                                <option value="精选">精选</option>
+                                <option value="百家">百家</option>
+                                <option value="本地">本地</option>
+                                <option value="娱乐">娱乐</option>
+                                <option value="社会">社会</option>
+                                <option value="军事">军事</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="editBtn">编辑文章</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/admin.js"></script>
+</html>

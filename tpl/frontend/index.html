@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,minimal-ui">
+    <title>百度新闻</title>
+    <link rel="stylesheet" href="css/reset.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/script.js"></script>
+</head>
+<body>
+<!--头部-->
+<header>
+    <div class="top">
+        <a href="#" class="bd-icon"></a>
+        <a href="#" class="gr-icon"></a>
+        <a href="#" class="logo"></a>
+        <a href="#" class="gz-icon"></a>
+        <a href="#" class="ss-icon"></a>
+    </div>
+    <div class="nav">
+        <ul class="nav1">
+            <li><a href="#" class="type">精选</a></li>
+            <li>
+                <b></b>
+                <a href="#" class="type">百家</a>
+            </li>
+            <li>
+                <b></b>
+                <a href="#" class="type">本地</a>
+            </li>
+            <li>
+                <b></b>
+                <a href="#" class="type">娱乐</a>
+            </li>
+            <li>
+                <b></b>
+                <a href="#" class="type">社会</a>
+            </li>
+            <li>
+                <b></b>
+                <a href="#" class="type">军事</a>
+            </li>
+        </ul>
+        <!--<ul class="nav2">-->
+            <!--<li><a href="#">女人</a></li>-->
+            <!--<li>-->
+                <!--<b></b>-->
+                <!--<a href="#">搞笑</a>-->
+            <!--</li>-->
+            <!--<li class="hlw">-->
+                <!--<b></b>-->
+                <!--<a href="#">互联网</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<b></b>-->
+                <!--<a href="#">科技</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<b></b>-->
+                <!--<a href="#">更多</a>-->
+            <!--</li>-->
+        <!--</ul>-->
+    </div>
+</header>
+<!--主体-->
+<article>
+    <div class="con" id="con">
+        <ul class="con-img1">
+            <li class="list1">
+                <a href="#">
+                    <img src="img/timg.jpg" alt=""/>
+                </a>
+                <p>
+                    <span>法国一辆运钞车遭袭 黄金被抢</span>
+                </p>
+            </li>
+            <li class="list2" style="display: none">
+                <a href="#">
+                    <img src="img/timg%20(1).jpg" alt=""/>
+                </a>
+                <p>
+                    <span>与大熊猫齐名的国宝级动物</span>
+                </p>
+            </li>
+            <li class="list3" style="display: none">
+                <a href="#">
+                    <img src="img/timg%20(2).jpg" alt=""/>
+                </a>
+                <p>
+                    <span>啦啦啦啦啦啦</span>
+                </p>
+            </li>
+        </ul>
+        <ol class="con-ol">
+            <li class="cur"></li>
+            <li></li>
+            <li></li>
+        </ol>
+    </div>
+    <div class="container">
+        <!--左图右文-->
+        <!--<div class="index-list-item">-->
+            <!--<div class="index-list-image">-->
+                <!--<img src="img/adaf2edda3cc7cd92574c9dc3001213fb80e915e.jpg" alt=""/>-->
+            <!--</div>-->
+            <!--<div class="index-list-main-text">-->
+                <!--<div class="index-list-main-title">习近平这样把制度笼子越扎越紧</div>-->
+                <!--<div class="index-list-main-time">-->
+                    <!--<b class="tip-time">2小时前</b>-->
+                    <!--<b class="tip-hot">热点</b>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--上文下图-->
+        <!--<div class="index-list-top">-->
+            <!--<div class="gg-title">乐视网二股东：我们有如下意见 贾跃亭：您哪位？</div>-->
+            <!--<div class="gg-img">-->
+                <!--<img src="img/1.JPEG" alt=""/>-->
+                <!--<img src="img/2.JPEG" alt=""/>-->
+                <!--<img src="img/3.JPEG" alt=""/>-->
+            <!--</div>-->
+            <!--<div class="index-time">1分钟前</div>-->
+        <!--</div>-->
+        <!--全文新闻-->
+        <!--<div class="index-list-bottom">-->
+            <!--<div class="bottom-tile">-->
+                <!--外媒： 2017将成为阿里巴巴迅猛增长之年-->
+            <!--</div>-->
+            <!--<div class="bottom-time">-->
+                <!--<b class="tip-time">3分钟前</b>-->
+                <!--<b class="tip-hot">猜你喜欢</b>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+</article>
+<!--页脚-->
+<footer>
+
+</footer>
+</body>
+<script>
+    $(".type").each(function () {
+        $(this).on('click',function () {
+            var typeText = $(this).text();
+            var url = "../../controller/NewsController.php?do=type&type='"+typeText+"'";
+            $.get(url,function (json) {
+//                console.log(json);
+                //在回调函数中将后台发过来的数据渲染到页面
+                var jsonArr = json.split("#");
+                var obj = {};
+                //清空容器
+                $(".container").empty();
+                for(var i in jsonArr){
+                    if(i != jsonArr.length -1){
+                        obj = JSON.parse(jsonArr[i]);
+//                        console.log(obj['news_title']+obj['news_content']);
+                        var newsDiv = document.createElement("div");
+                        newsDiv.className = 'index-list-item';
+
+                        var newsImageDiv = document.createElement("div");
+                        newsImageDiv.className = 'index-list-image';
+                        //创建图文列表
+                        var listItem =  $('<div>').addClass("index-list-item");
+                        listItem.append($('<div>').addClass("index-list-image")
+                                .append($('<img>').attr("src","../"+obj['thumb_path'])));
+                        listItem .append($('<div>').addClass('index-list-main-text').append(
+                                    $('<div>').addClass("index-list-main-title").text(obj['news_title'])
+                                ).append(
+                                    $('<div>').addClass("index-list-main-time")
+                                        .append($('<b>').addClass('tip-time').text(obj['post_time']))
+                                        .append($('<b>').addClass('tip-hot').text(obj['news_mark'])
+                                )));
+                        $(".container").append($("<a>").attr("href","").append(listItem));
+                    }
+                }
+            });
+        });
+    });
+
+</script>
+</html>

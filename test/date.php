@@ -9,6 +9,8 @@
 
 $time = time();
 //echo $time;
-$date = date('Y-m-d H:i:s',$time);  //当前时间
+$date = date('YmdHis');  //当前时间
 echo $date;
 var_dump($date);
+
+echo rand(100,999);  //生成100-999之间的随机数

@@ -37,21 +37,23 @@ function listNews(){
     while($row = mysqli_fetch_assoc($result)) {
         array_push($arr,json_encode($row));
     }
-
     echo json_encode($arr);
 
 }
 
 //获取分类下的所有新闻
 function getNewsByType(){
-    $type = $_GET['type'];
+    $type = "'".$_GET['type']."'";
     //连接数据库
     $conn = DBUtils::getConnection();
     $sql = "select * from news where news_classification = $type";
+//    echo json_encode($sql);
     $result = mysqli_query($conn,$sql);
+    $arr = array();
     while($row = mysqli_fetch_assoc($result)){
-        echo json_encode($row)."#";
+      array_push($arr,$row);
     }
+    echo json_encode($arr);
 }
 
 

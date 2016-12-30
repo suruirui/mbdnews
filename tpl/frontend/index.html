@@ -141,43 +141,45 @@
 </footer>
 </body>
 <script>
+    listNewsByType("精选");
     $(".type").each(function () {
         $(this).on('click',function () {
             var typeText = $(this).text();
-            var url = "../../controller/NewsController.php?do=type&type='"+typeText+"'";
-            $.get(url,function (json) {
-//                console.log(json);
-                //在回调函数中将后台发过来的数据渲染到页面
-                var jsonArr = json.split("#");
-                var obj = {};
-                //清空容器
-                $(".container").empty();
-                for(var i in jsonArr){
-                    if(i != jsonArr.length -1){
-                        obj = JSON.parse(jsonArr[i]);
-//                        console.log(obj['news_title']+obj['news_content']);
-                        var newsDiv = document.createElement("div");
-                        newsDiv.className = 'index-list-item';
-
-                        var newsImageDiv = document.createElement("div");
-                        newsImageDiv.className = 'index-list-image';
-                        //创建图文列表
-                        var listItem =  $('<div>').addClass("index-list-item");
-                        listItem.append($('<div>').addClass("index-list-image")
-                                .append($('<img>').attr("src","../"+obj['thumb_path'])));
-                        listItem .append($('<div>').addClass('index-list-main-text').append(
-                                    $('<div>').addClass("index-list-main-title").text(obj['news_title'])
-                                ).append(
-                                    $('<div>').addClass("index-list-main-time")
-                                        .append($('<b>').addClass('tip-time').text(obj['post_time']))
-                                        .append($('<b>').addClass('tip-hot').text(obj['news_mark'])
-                                )));
-                        $(".container").append($("<a>").attr("href","").append(listItem));
-                    }
-                }
-            });
+            listNewsByType(typeText);
         });
     });
+
+    function listNewsByType(type){
+        $.ajax({
+            type:'GET',
+            url:'../../controller/NewsController.php',
+            data:{"do":"type","type":type},
+            dataType:"json",
+            success:function(data){
+//                console.log(data);
+                $(".container").empty();
+                //在回调函数中将后台发过来的数据渲染到页面
+                data.forEach(function(obj,index){
+                    var newsDiv = document.createElement("div");
+                    newsDiv.className = 'index-list-item';
+                    var newsImageDiv = document.createElement("div");
+                    newsImageDiv.className = 'index-list-image';
+                    //创建图文列表
+                    var listItem =  $('<div>').addClass("index-list-item");
+                    listItem.append($('<div>').addClass("index-list-image")
+                        .append($('<img>').attr("src","../"+obj['thumb_path'])));
+                    listItem .append($('<div>').addClass('index-list-main-text').append(
+                        $('<div>').addClass("index-list-main-title").text(obj['news_title'])
+                    ).append(
+                        $('<div>').addClass("index-list-main-time")
+                            .append($('<b>').addClass('tip-time').text(obj['post_time']))
+                            .append($('<b>').addClass('tip-hot').text(obj['news_mark'])
+                            )));
+                    $(".container").append($("<a>").attr("href","").append(listItem));
+                });
+            }
+        });
+    }
 
 </script>
 </html>

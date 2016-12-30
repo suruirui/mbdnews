@@ -35,6 +35,7 @@ $(function () {
         $("#delModal").modal("show");
         newsId = $(this).parent().prevAll().eq(5).html();
     });
+
     //删除确认，向后台发送数据
     $("#confirmBtn").on('click',function () {
         $.ajax({
@@ -64,57 +65,139 @@ $(function () {
             "newsMark":$("#addNewsMark").val(),
             "newsClassify":$("#addNewsType").val()
         }
-        $.ajax({
-            type:"POST",
-            url:"../controller/add.php",
+
+        $("#addForm").ajaxSubmit({  //使用jqueryForm插件的 ajaxSubmit方法来做异步的表单提交
+            dataType:  'json',
             data:newsJson,
-            dataType:"json",
-            success:function (data){
-              console.log(data);
+            beforeSend: function() {  //提交表单之前的回调函数
+                console.log("开始上传...");
+            },
+            success: function(data) {
+                console.log(data);
+                $("#addForm")[0].reset();  //重置表单
                 $("#addModal").modal("hide");  //关闭模态框
                 listNews();
             }
         });
+
     });
 
-    //编辑新闻，事件委托打开模态框 加载数据
-    $("#dataTable").on('click','.btn-primary',function (){
+
+    //编辑新闻，事件委托打开模态框  加载数据
+    $(".table").on("click",".btn-primary",function () {
+        //打开编辑模态框
         $("#editModal").modal("show");
-        newsId =  $(this).parent().prevAll().eq(5).html();
-        console.log(newsId);
+        //加载载数据
+        newsId = $(this).parent().prevAll().eq(5).html();
+        //向后台发送请求
         $.ajax({
             type:"GET",
             url:"../controller/findRow.php",
             data:{"newsId":newsId},
             dataType:"json",
-            success:function (data){
+            success:function (data) {
                 $("#editNewsTitle").val(data.news_title);
                 $("#editNewsContent").val(data.news_content);
                 $("#editNewsMark").val(data.news_mark);
                 $("#editNewsType").val(data.news_classification);
             }
-        });
-    });
+        })
+    })
+
+    //点击模态框的编辑文章按钮 发送数据到后台做修改
     $("#editBtn").click(function () {
-        var newsJson = {
+        //获取数据
+        var jsonNews = {
             "newsId":newsId,
             "newsTitle":$("#editNewsTitle").val(),
             "newsContent":$("#editNewsContent").val(),
             "newsMark":$("#editNewsMark").val(),
             "newsClassify":$("#editNewsType").val()
         }
+        //发送到后台
         $.ajax({
             type:"POST",
             url:"../controller/add.php",
-            data:newsJson,
+            data:jsonNews,
             dataType:"json",
-            success:function (data){
+            success:function (data) {
                 console.log(data);
-                $("#editModal").modal("hide");  //关闭模态框
+                //列表再次渲染
                 listNews();
+                $("#editModal").modal("hide");
             }
         });
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // $("#dataTable").on('click','.btn-primary',function (){
+    //     $("#editModal").modal("show");
+    //     newsId =  $(this).parent().prevAll().eq(5).html();
+    //     console.log(newsId);
+    //     $.ajax({
+    //         type:"GET",
+    //         url:"../controller/findRow.php",
+    //         data:{"newsId":newsId},
+    //         dataType:"json",
+    //         success:function (data){
+    //             $("#editNewsTitle").val(data.news_title);
+    //             $("#editNewsContent").val(data.news_content);
+    //             $("#editNewsMark").val(data.news_mark);
+    //             $("#editNewsType").val(data.news_classification);
+    //         }
+    //     });
+    // });
+    // $("#editBtn").click(function () {
+    //     var newsJson = {
+    //         "newsId":newsId,
+    //         "newsTitle":$("#editNewsTitle").val(),
+    //         "newsContent":$("#editNewsContent").val(),
+    //         "newsMark":$("#editNewsMark").val(),
+    //         "newsClassify":$("#editNewsType").val()
+    //     }
+    //     $.ajax({
+    //         type:"POST",
+    //         url:"../controller/add.php",
+    //         data:newsJson,
+    //         dataType:"json",
+    //         success:function (data){
+    //             console.log(data);
+    //             $("#editModal").modal("hide");  //关闭模态框
+    //             listNews();
+    //         }
+    //     });
+    // });
 
 
     //点击
